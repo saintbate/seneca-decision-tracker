@@ -434,9 +434,16 @@ var VoiceRecordingModal = class extends import_obsidian.Modal {
     this.analyser.connect(silentGain);
     silentGain.connect(this.audioContext.destination);
     this.startLevelMeter(meterFill);
-    const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus") ? "audio/webm;codecs=opus" : "audio/webm";
+    const candidates = [
+      "audio/webm;codecs=opus",
+      "audio/webm",
+      "audio/mp4",
+      "audio/ogg;codecs=opus",
+      "audio/ogg"
+    ];
+    const mimeType = candidates.find((m) => MediaRecorder.isTypeSupported(m)) || "";
     this.audioChunks = [];
-    this.mediaRecorder = new MediaRecorder(this.stream, { mimeType });
+    this.mediaRecorder = mimeType ? new MediaRecorder(this.stream, { mimeType }) : new MediaRecorder(this.stream);
     this.mediaRecorder.ondataavailable = (e) => {
       if (e.data.size > 0) {
         this.audioChunks.push(e.data);
@@ -546,8 +553,15 @@ var VoiceRecordingModal = class extends import_obsidian.Modal {
     }
   }
   async transcribe(audioBlob, mimeType) {
-    const ext = mimeType.includes("webm") ? "webm" : "ogg";
-    const file = new File([audioBlob], `recording.${ext}`, { type: mimeType });
+    const extMap = {
+      "audio/webm;codecs=opus": "webm",
+      "audio/webm": "webm",
+      "audio/mp4": "m4a",
+      "audio/ogg;codecs=opus": "ogg",
+      "audio/ogg": "ogg"
+    };
+    const ext = extMap[mimeType] || "webm";
+    const file = new File([audioBlob], `recording.${ext}`, { type: mimeType || "audio/webm" });
     const formData = new FormData();
     formData.append("file", file);
     formData.append("model", "whisper-1");
