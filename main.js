@@ -449,7 +449,7 @@ var VoiceRecordingModal = class extends import_obsidian.Modal {
         this.audioChunks.push(e.data);
       }
     };
-    this.mediaRecorder.start();
+    this.mediaRecorder.start(1e3);
     this.recordingStartTime = Date.now();
     const timerInterval = window.setInterval(() => {
       if (!this.mediaRecorder || this.mediaRecorder.state === "inactive") {
@@ -508,7 +508,10 @@ var VoiceRecordingModal = class extends import_obsidian.Modal {
         const blob = new Blob(this.audioChunks, { type: (_b = (_a = this.mediaRecorder) == null ? void 0 : _a.mimeType) != null ? _b : "audio/webm;codecs=opus" });
         resolve(blob);
       };
-      this.mediaRecorder.requestData();
+      try {
+        this.mediaRecorder.requestData();
+      } catch (e) {
+      }
       this.mediaRecorder.stop();
     });
   }

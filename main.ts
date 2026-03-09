@@ -564,7 +564,8 @@ class VoiceRecordingModal extends Modal {
       }
     };
 
-    this.mediaRecorder.start();
+    // Use 1s timeslice so ondataavailable fires during recording (iOS requires this)
+    this.mediaRecorder.start(1000);
     this.recordingStartTime = Date.now();
 
     // Update timer display
@@ -635,7 +636,7 @@ class VoiceRecordingModal extends Modal {
         resolve(blob);
       };
 
-      this.mediaRecorder.requestData();
+      try { this.mediaRecorder.requestData(); } catch { /* not supported on all platforms */ }
       this.mediaRecorder.stop();
     });
   }
