@@ -595,7 +595,10 @@ class VoiceRecordingModal extends Modal {
         const durationSec = ((Date.now() - this.recordingStartTime) / 1000).toFixed(1);
 
         if (blob.size < 1000) {
-          new Notice("Seneca: Recording too short or empty. Try speaking louder and longer.");
+          new Notice(
+            `Seneca: Recording empty (${blob.size}B, format=${mimeType || "default"}, chunks=${this.audioChunks.length}). Check mic permissions.`,
+            10000,
+          );
           this.close();
           return;
         }

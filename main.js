@@ -473,7 +473,10 @@ var VoiceRecordingModal = class extends import_obsidian.Modal {
         const sizeKB = (blob.size / 1024).toFixed(0);
         const durationSec = ((Date.now() - this.recordingStartTime) / 1e3).toFixed(1);
         if (blob.size < 1e3) {
-          new import_obsidian.Notice("Seneca: Recording too short or empty. Try speaking louder and longer.");
+          new import_obsidian.Notice(
+            `Seneca: Recording empty (${blob.size}B, format=${mimeType || "default"}, chunks=${this.audioChunks.length}). Check mic permissions.`,
+            1e4
+          );
           this.close();
           return;
         }
