@@ -1,0 +1,10 @@
+{
+  "id": "seneca-decision-tracker",
+  "name": "Seneca",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "description": "Voice-first decision tracker. Speak your thoughts, get structured notes with AI-powered observations that learn your thinking patterns over time.",
+  "author": "Nicholas Bateman",
+  "authorUrl": "https://github.com/nicholasbateman",
+  "isDesktopOnly": false
+}
